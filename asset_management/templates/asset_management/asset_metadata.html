@@ -1,0 +1,96 @@
+{% load humanize %}
+
+<div class="box-data-hide">
+    {% if asset.logo %}
+        <div class="row align-items-center justify-content-center mb-4">
+            <img src="{{ asset.logo }}" class="picture-big-fixed" alt="">
+        </div>
+    {% endif %}
+    <dl class="row mb-2">
+        <dt class="col font-7 text-center-xs">Capitalizzazione</dt>
+        <dd class="col text-muted text-right font-5 text-center-xs">
+            {% if market_cap is not None %}
+                {{ market_cap|floatformat:0|intcomma }}
+            {% else %}
+                -
+            {% endif %}
+        </dd>
+    </dl>
+    <dl class="row mb-2">
+        <dt class="col font-7 text-center-xs">Circolante</dt>
+        <dd class="col text-muted text-right font-5 text-center-xs">
+            {% if circulating_supply is not None %}
+                {{ circulating_supply|floatformat:0|intcomma }}
+                {% if circulating_percentage is not None %}
+                    ({{ circulating_percentage|floatformat:2 }}%)
+                {% endif %}
+            {% else %}
+                -
+            {% endif %}
+        </dd>
+    </dl>
+    <dl class="row mb-2">
+        <dt class="col font-7 text-center-xs">Supply massima</dt>
+        <dd class="col text-muted text-right font-5 text-center-xs">
+            {% if max_supply is not None %}
+                {{ max_supply|floatformat:0|intcomma }}
+            {% else %}
+                -
+            {% endif %}
+        </dd>
+    </dl>
+    <dl class="row mb-2">
+        <dt class="col font-7 text-center-xs">Tipo</dt>
+        <dd class="col text-muted text-right font-5 text-center-xs">
+            {{ asset.category }}
+        </dd>
+    </dl>
+    <hr>
+    <div class="row">
+        {% if asset.description != '' %}
+            <div class="col-12 font-7 mb-3">Descrizione</div>
+            <div class="col-12 col-12 text-muted font-4 text-center-xs">
+                {{ asset.description|truncatewords:25 }}
+                <a class="site-blue-text font-6 cursor-pointer text-show-more d-flex justify-content-end">
+                    Leggi tutto
+                </a>
+            </div>
+        {% else %}
+            <div class="col-12 font-7 my-3">Nessuna descrizione</div>
+        {% endif %}
+    </div>
+    <hr>
+</div>
+<div class="row">
+    <dt class="col-sm-9 col-12 font-7 text-center-xs expand-box-data cursor-pointer">
+        <span class="font-7 box-data-hide">
+            Link utili
+            <i class="fas fa-caret-down"></i>
+        </span>
+        <i class="fas fa-times box-data-show text-right" style="display: none"></i>
+    </dt>
+</div>
+<div id="view-box-information" style="display: none">
+    {% for url in asset.urls.all %}
+        <div class="row">
+            <div class="col-sm-9 col-12 font-6 break-word">
+                <a href="{{ url.value }}" target="_blank" class="site-blue-text link-decorated">
+                    {{ url.description }}
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="text-show-more-modal" tabindex="-1" aria-labelledby="text-show-more-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div id="modal-bg" class="d-flex align-items-start justify-content-end p-4">
+                <i id="close-show-more-modal" class="fas fa-times cursor-pointer white-icon font-size-120"></i>
+            </div>
+            <div class="modal-body p-4 text-justify">
+                {{ asset.description }}
+            </div>
+        </div>
+    </div>
+</div>

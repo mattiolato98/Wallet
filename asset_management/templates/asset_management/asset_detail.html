@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load asset_filters %}
+{% load mathfilters %}
+
+{% block title %}{{ block.super }} {{ asset.name }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid mb-3 w-auto site-attached-col">
+        <div class="row">
+            <div id="asset-detail-user-info" class="site-col col-lg-9 col-12">
+                <div class="row">
+                    <div class="col-12 site-col site-box shadow bg-white p-4">
+                        <div class="row">
+                            <div class="col site-col">
+                                <h6 class="font-5">
+                                    <a class="site-link" href="{% url 'asset_management:asset-list' %}">
+                                        Portafoglio
+                                    </a>
+                                    &nbsp;>&nbsp;
+                                    {% if user.portfolios.count > 1 %}
+                                        {% with portfolio=user|user_asset:asset|portfolio %}
+                                            <a class="site-link"
+                                               href="{% url 'asset_management:portfolio-detail' portfolio.pk %}">
+                                                {{ portfolio.name }}
+                                            </a>
+                                            &nbsp;>&nbsp;
+                                        {% endwith %}
+                                    {% endif %}
+                                    {{ asset.name }}
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="site-col col">
+                                {% for tag in asset.tags.all %}
+                                    {% with "#ed559a, #13bd7c, #3861FB, #F1A208, #474747"|split:','|select:forloop.counter as color %}
+                                        <span class="badge font-6 font-size-90 p-2 shadow mb-1" style="background-color: {{ color }}; color: white">
+                                        {{ tag.name }}
+                                    </span>
+                                    {% endwith %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="row mt-lg-4 mt-2">
+                            <div class="col-lg-auto col-12 site-col">
+                                <h1 class="font-7 mb-0">{{ asset.name }}</h1>
+                                <h5 class="font-5 text-muted">{{ asset.symbol }}</h5>
+                                {% if net > 0 %}
+                                    <h5 class="text-success font-6">
+                                        + {{ net|floatformat:2 }}{{ user.fiat.sign }} ({{ net_percentage|floatformat:2 }}%)
+                                    </h5>
+                                {% elif net == 0 %}
+                                    <h5 class="text-muted font-6">
+                                        + {{ net|floatformat:2 }}{{ user.fiat.sign }} ({{ net_percentage|floatformat:2 }}%)
+                                    </h5>
+                                {% else %}
+                                    <h5 class="text-danger font-6">
+                                        - {{ net|abs|floatformat:2 }}{{ user.fiat.sign }} ({{ net_percentage|abs|floatformat:2 }}%)
+                                    </h5>
+                                {% endif %}
+                            </div>
+                            <div class="col-lg col-12 site-col media d-flex align-items-center lg-only">
+                                <div class="media-body mr-3 text-muted text-right">
+                                    <a href="#"
+                                       class="flat-link font-6 break-word">
+                                        {{ user.username|truncatechars:30 }}
+                                    </a>
+                                    <br>
+                                    <span class="font-4 break-word">{{ user.profile.full_name|truncatechars:40 }}</span>
+                                </div>
+                                <a href="#">
+                                    <img class="rounded-picture-medium align-self-center" alt=""
+                                         src="{{ user.profile.picture.url }}">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mt-lg-4 mt-2">
+                            <div class="col-lg col-12 site-col d-flex column-flex align-items-start">
+                                <div class="d-flex justify-content-start">
+                                    <h4 class="font-6 mb-0">{{ user_asset.amount|floatformat:8 }} {{ asset.symbol }} -</h4>
+                                    &nbsp;
+                                    <h4 class="font-6 site-blue-text mb-0"> {{ fiat|floatformat:2 }} {{ user.fiat.sign }}</h4>
+                                </div>
+                                <h6 class="font-5 text-muted">
+                                    Prezzo attuale: {{ price|floatformat:2 }} {{ user.fiat.symbol }}
+                                </h6>
+                            </div>
+                            <div class="col-lg col-12 site-col d-flex justify-content-end align-items-center sm-left">
+                                {% include 'asset_management/asset_percentage.html' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-lg col-12 site-col site-attached-col site-box shadow p-4 mr-2 bg-white">
+                        <h4 class="font-6">Quantità</h4>
+                        <hr>
+                        <dl class="row align-items-center justify-content-between">
+                            <dt class="col font-6 font-size-110">Acquistata</dt>
+                            <dd class="col font-5 text-right">
+                                {{ user_asset.buy_amount|floatformat:8 }} {{ asset.symbol }}
+                            </dd>
+                        </dl>
+                        <dl class="row align-items-center justify-content-between">
+                            <dt class="col font-6 font-size-110">Venduta</dt>
+                            <dd class="col font-5 text-right">
+                                {{ user_asset.sell_amount|floatformat:8 }} {{ asset.symbol }}
+                            </dd>
+                        </dl>
+                        <dl class="row align-items-center justify-content-between">
+                            <dt class="col font-6 font-size-110">Posseduta</dt>
+                            <dd class="col font-5 text-right">
+                                {{ user_asset.amount|floatformat:8 }} {{ asset.symbol }}
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-lg col-12 site-col site-attached-col site-box shadow p-4 mx-1 bg-white">
+                        <h4 class="font-6">Prezzo medio</h4>
+                        <hr>
+                        {% with user_asset.average_buy_price as avg_buy %}
+                            {% with user_asset.average_sell_price as avg_sell %}
+                                {% with user_asset.average_load_price as load_avg %}
+                                    <dl class="row align-items-center justify-content-between">
+                                        <dt class="col font-6 font-size-110">Acquisto</dt>
+                                        <dd class="col font-5 text-right">
+                                            {{ user_asset.average_buy_price|floatformat:2 }} {{ user.fiat.symbol }}
+                                        </dd>
+                                    </dl>
+                                    <dl class="row align-items-center justify-content-between">
+                                        <dt class="col font-6 font-size-110">Vendita</dt>
+                                        <dd class="col font-5 text-right">
+                                            {{ user_asset.average_sell_price|floatformat:2 }} {{ user.fiat.symbol }}
+                                        </dd>
+                                    </dl>
+                                    <dl class="row align-items-center justify-content-between">
+                                        <dt class="col font-6 font-size-110">Carico</dt>
+                                        <dd class="col font-5 text-right">{{ load_avg|floatformat:2 }} {{ user.fiat.symbol }}</dd>
+                                    </dl>
+                                {% endwith %}
+                            {% endwith %}
+                        {% endwith %}
+                    </div>
+                    <div class="col-lg col-12 site-col site-attached-col site-box shadow p-4 ml-2 bg-white">
+                        <h4 class="font-6">Bilancio</h4>
+                        <hr>
+                        {% with user_asset.buy_volume as vol_buy %}
+                            {% with user_asset.sell_volume as vol_sell %}
+                                {% with vol_sell|sub:vol_buy as total_vol %}
+                                    <dl class="row align-items-center justify-content-between">
+                                        <dt class="col font-6 font-size-110">Acquisti</dt>
+                                        <dd class="col font-5 text-right">{{ vol_buy|floatformat:2 }} {{ user.fiat.sign }}</dd>
+                                    </dl>
+                                    <dl class="row align-items-center justify-content-between">
+                                        <dt class="col font-6 font-size-110">Vendite</dt>
+                                        <dd class="col font-5 text-right">{{ vol_sell|floatformat:2 }} {{ user.fiat.sign }}</dd>
+                                    </dl>
+                                    <dl class="row align-items-center justify-content-between">
+                                        <dt class="col font-6 font-size-110">Totale</dt>
+                                        <dd class="col font-5 text-right">{{ total_vol|floatformat:2 }} {{ user.fiat.sign }}</dd>
+                                    </dl>
+                                {% endwith %}
+                            {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            <div class="col site-col site-box shadow ml-3 p-4 bg-white">
+                {% include 'asset_management/asset_metadata.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid p-4 mb-2 w-75 mt-4">
+        <div class="row d-flex align-items-center justify-content-end">
+            <a href="{% url 'transaction_management:add-transaction' asset.pk %}" class="btn site-btn shadow">
+                <i class="fas fa-plus"></i> <span class="font-7">Nuova transazione</span>
+            </a>
+        </div>
+    </div>
+    <div>
+        {% include 'transaction_management/transaction_list.html' %}
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/asset.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% load asset_filters %}
+{% load humanize %}
+
+{% for transaction in transactions %}
+    <div class="container-fluid site-box shadow p-4 mb-3 bg-white w-75">
+        <div class="row">
+            <div class="col unnecessary-column"></div>
+            <div class="col-lg-9 col-12 site-col d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="font-4 text-muted">{{ transaction.date|naturalday }}</span>
+                    {% if transaction.buy %}
+                        <h5 class="font-7 text-success">Acquisto</h5>
+                    {% else %}
+                        <h5 class="font-7 text-danger">Vendita</h5>
+                    {% endif %}
+                </div>
+                <i class="fas fa-ellipsis-h site-small-icon"
+                   data-toggle="dropdown"></i>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                    <a class="dropdown-item cursor-pointer"
+                       href="{% url 'transaction_management:update-transaction' transaction.pk asset.pk %}">
+                        Modifica
+                    </a>
+                    <a class="dropdown-item bg-danger-hover cursor-pointer font-6"
+                       href="{% url 'transaction_management:delete-transaction' transaction.pk asset.pk %}">
+                        <span class="text-danger">Elimina</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+        <div class="row mt-lg-3">
+            <div class="col unnecessary-column"></div>
+            <div class="col-lg-9 col-12 site-col d-flex align-items-center justify-content-between">
+                <div class="row w-100 align-items-center justify-content-start">
+                    <div class="col-lg-auto col-12 site-col">
+                        <h5 class="font-6">Prezzo</h5>
+                        <span class="font-5">{{ transaction.price|floatformat:2 }} {{ user.fiat.symbol }}</span>
+                    </div>
+                    <div class="col-lg-auto col-12 site-col ml-lg-5">
+                        <h5 class="font-6">Volume</h5>
+                        <span class="font-5">{{ transaction.volume|floatformat:2 }} {{ user.fiat.sign }}</span>
+                    </div>
+                    <div class="col-lg-auto col-12 site-col ml-lg-5">
+                        <h5 class="font-6">Quantità</h5>
+                        <span class="font-5">{{ transaction.amount|floatformat:8 }} {{ asset.symbol }}</span>
+                    </div>
+                    <div class="col-lg col-12 site-col d-flex column-flex justify-content-center align-items-end p-0">
+                        <h5 class="font-6 text-right">Commissioni</h5>
+                        <span class="font-5 text-right">
+                            {% if transaction.buy %}
+                                {{ transaction.buy.fee_amount|floatformat:8 }} {{ asset.symbol }}
+                            {% else %}
+                                {{ transaction.sell.fee_amount|floatformat:2 }} {{ user.fiat.sign }}
+                            {% endif %}
+                            ({{ transaction.fee }}%)
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+        <div class="row">
+            <div class="col unnecessary-column"></div>
+            <div class="col-lg-9 col-12">
+                <hr>
+                <div class="row justify-content-between align-items-center">
+                    {% if transaction.buy %}
+                        <div class="col-sm-auto col-12 site-col">
+                            <h5 class="font-7">- {{ transaction.volume|floatformat:2 }} {{ user.fiat.sign }}</h5>
+                        </div>
+                        <div class="col-sm-auto col-12 site-col">
+                            <h5 class="font-7">+ {{ transaction.buy.net_amount|floatformat:8 }} {{ asset.symbol }}</h5>
+                        </div>
+                    {% else %}
+                        <div class="col-sm-auto col-12 site-col">
+                            <h5 class="font-7">- {{ transaction.amount|floatformat:8 }} {{ asset.symbol }}</h5>
+                        </div>
+                        <div class="col-sm-auto col-12 site-col">
+                            <h5 class="font-7">+ {{ transaction.sell.net_volume|floatformat:2 }} {{ user.fiat.sign }}</h5>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+{% endfor %}

@@ -1,0 +1,16 @@
+{% extends 'user_management/profile_form.html' %}
+
+{% block title %}{{ block.super }} Immagine del profilo{% endblock %}
+
+{% block form_page_path %}
+    <a class="site-link" href="{% url 'user_management:user-detail' %}">Profilo</a>
+    &nbsp;>&nbsp;
+    <a class="site-link" href="{% url 'user_management:profile-update' %}">Modifica profilo</a>
+    &nbsp;>&nbsp;
+    Immagine del profilo
+{% endblock %}
+
+{% block form_title %}Aggiorna l'immagine del profilo{% endblock %}
+{% block submit_button_value %}Salva immagine{% endblock %}
+{% block submit_button_form_id %}update-profile-picture-crispy-form{% endblock %}
+{% block cancel_button_url %}{% url 'user_management:user-detail' %}{% endblock %}

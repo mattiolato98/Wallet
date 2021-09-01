@@ -1,0 +1,31 @@
+<div class="media d-flex align-items-center col p-0">
+    <div class="row">
+        {% if asset.logo %}
+            <div class="col-3 xxs-hide pl-0">
+                <img src="{{ asset.logo }}" class="picture-medium-fixed align-self-center" alt="">
+            </div>
+        {% else %}
+            <div class="picture-medium-fixed"></div>
+        {% endif %}
+        <div class="col p-xxs-0">
+            <div class="media-body ml-3 ml-xxs-0 d-flex column-flex justify-content-center align-items-start">
+                <span class="font-6 mb-0">{{ asset.name }}</span>
+                <span class="font-5 text-muted mt-0">{{ asset.symbol }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex align-items-center justify-content-end asset-actions-root">
+    <i class="fas fa-trash text-danger cursor-pointer font-size-120 delete-asset" data-post-id="{{ asset.pk }}"></i>
+    {% if move %}
+        <i class="fas fa-exchange-alt cursor-pointer font-size-120 ml-3 move-asset-root" data-toggle="dropdown"
+           data-post-id="{{ asset.pk }}"></i>
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+            {% for portfolio in portfolios %}
+                <a data-post-id="{{ portfolio.pk }}" class="dropdown-item cursor-pointer move-asset">
+                    {{ portfolio.name }}
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

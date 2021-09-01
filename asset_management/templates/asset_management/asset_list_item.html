@@ -1,0 +1,36 @@
+{% load asset_filters %}
+{% load mathfilters %}
+
+
+<div class="media d-flex align-items-center col p-0">
+    <div class="row">
+        {% if asset.object.logo %}
+            <div class="col-3 xxs-hide pl-0">
+                <img src="{{ asset.object.logo }}" class="picture-medium-fixed align-self-center" alt="">
+            </div>
+        {% else %}
+            <div class="picture-medium-fixed"></div>
+        {% endif %}
+        <div class="col p-xxs-0">
+            <div class="media-body ml-3 ml-xxs-0 d-flex column-flex justify-content-center align-items-start">
+                <span class="font-6 mb-0">{{ asset.object.name }}</span>
+                <span class="font-5 text-muted mt-0">{{ asset.object.symbol }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex column-flex align-items-end justify-content-center">
+    {% with user|user_asset:asset.object as user_asset %}
+        <span class="font-4">{{ user_asset.amount|round_float }} {{ asset.object.symbol }}</span>
+        <div>
+            <span class="font-6">{{ asset.fiat|floatformat:2 }} {{ user.fiat.sign }}</span>
+            {% if asset.net_percentage > 0 %}
+                <span class="text-success font-6">+ {{ asset.net_percentage|floatformat:2 }}%</span>
+            {% elif asset.net_percentage == 0 %}
+                <span class="text-muted font-6">+ {{ asset.net_percentage|floatformat:2 }}%</span>
+            {% else %}
+                <span class="text-danger font-6">- {{ asset.net_percentage|abs|floatformat:2 }}%</span>
+            {% endif %}
+        </div>
+    {% endwith %}
+</div>

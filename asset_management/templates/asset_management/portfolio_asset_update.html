@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+    <style type="text/css">
+        .list-group-item {
+            border-bottom: none;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}{{ block.super }} Gestisci asset{% endblock %}
+
+{% block content %}
+    <div class="container-fluid site-box p-4 mb-3 bg-white w-100 shadow">
+        <div class="row">
+            <div class="col unnecessary-column"></div>
+            <div class="col-lg-6 col-12 site-col">
+                <div class="mb-5">
+                    <h6 class="font-5">
+                        <a class="site-link" href="{% url 'asset_management:asset-list' %}">
+                            Portafoglio
+                        </a>
+                        &nbsp;>&nbsp;
+                        <a class="site-link" href="{% url 'asset_management:portfolio-detail' portfolio.pk %}">
+                            {{ portfolio.name }}
+                        </a>
+                        &nbsp;>&nbsp;
+                        Gestisci asset
+                    </h6>
+                    <h5 class="font-6">Gestisci asset nel portafoglio</h5>
+                </div>
+                {% include 'asset_management/asset_flat_list.html' with assets=portfolio.assets move=True %}
+                <div class="mt-4 mb-2 site-flex-buttons">
+                    <a class="btn site-btn font-6" href="{% url 'asset_management:portfolio-detail' portfolio.pk %}">
+                        Fine
+                    </a>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+    {% include 'asset_management/asset_ajax.html' %}
+    <script src="{% static 'js/asset.js' %}"></script>
+{% endblock %}

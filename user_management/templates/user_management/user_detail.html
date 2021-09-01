@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ block.super }} {{ user.username|truncatechars:30 }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid p-4 mb-3 bg-white w-100  mb-5 shadow-lg site-box">
+        <div class="row">
+            <div class="col-lg-3 col-12 d-flex align-items-top justify-content-start mobile-center">
+                {% if user.has_profile and user.profile.picture %}
+                    <img src="{{ user.profile.picture.url }}" class="rounded-picture-extra-big" alt="">
+                {% endif %}
+            </div>
+            <div class="site-col col-lg-6 col-12 mt-3 mb-3">
+                {% if not user.has_profile %}
+                    <div class="mb-4">
+                        <span class="font-7 text-danger">
+                            Completa il tuo profilo.
+                        </span>
+                        <a class="site-blue-text font-7 mr-3"
+                           href="{% url 'user_management:profile-create' %}">
+                            Crea profilo
+                        </a>
+                    </div>
+                {% endif %}
+                <div class="d-flex align-items-center justify-content-between break-word flex-wrap">
+                    <h2 class="font-3">
+                        {{ user.username }}
+                    </h2>
+                    <div class="d-flex align-items-center">
+                        {% if user.has_profile %}
+                            <a href="{% url 'user_management:profile-update' %}"
+                               class="site-blue-text font-7 no-decoration mr-3">
+                                Modifica profilo
+                            </a>
+                        {% endif %}
+                        <a class="flat-link mr-3" data-toggle="tooltip" data-placement="top"
+                           title="Impostazioni" href="{% url 'user_management:user-settings' %}">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                        <a class="flat-link" data-toggle="tooltip" data-placement="top"
+                           title="Esci" href="{% url 'user_management:logout' %}">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col site-col">
+                        <span class="font-6">{{ user.assets.count }}</span>
+                        <span class="font-4">Asset</span>
+                    </div>
+                    <div class="col site-col d-flex justify-content-center">
+                        <span class="font-6">{{ user.transaction_count }} &nbsp;</span>
+                        <span class="font-4">Transazioni</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex column-flex align-items-start profile-data flex-wrap break-word">
+                    <div>
+                        <span class="font-7">{{ user.profile.full_name }}</span>
+                        <span class="font-4"> - {{ user.email }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col unnecessary-column">
+            </div>
+        </div>
+    </div>
+{% endblock %}

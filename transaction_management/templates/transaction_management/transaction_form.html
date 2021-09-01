@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load asset_filters %}
+
+{% block content %}
+    <div class="container-fluid site-box p-4 mb-3 bg-white w-100 shadow">
+        <div class="row">
+            <div class="col site-col">
+                <div class="media d-flex align-items-center">
+                    <a href="{% url 'asset_management:asset-detail' asset.pk %}">
+                        <img src="{{ asset.logo }}" class="rounded-picture-medium align-self-center" alt="">
+                    </a>
+                    <div class="media-body ml-3 text-muted">
+                        <a href="{% url 'asset_management:asset-detail' asset.pk %}"
+                           class="flat-link font-6 break-word">
+                            {{ asset.name }}
+                        </a>
+                        <br>
+                        <span class="font-4 break-word">{{ asset.symbol }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12 site-col">
+                <div class="mb-5">
+                    <h6 class="font-5">
+                        <a class="site-link" href="{% url 'asset_management:asset-list' %}">
+                            Portafoglio
+                        </a>
+                        &nbsp;>&nbsp;
+                        {% if user.portfolios.count > 1 %}
+                            {% with portfolio=user|user_asset:asset|portfolio %}
+                                <a class="site-link"
+                                   href="{% url 'asset_management:portfolio-detail' portfolio.pk %}">
+                                    {{ portfolio.name }}
+                                </a>
+                                &nbsp;>&nbsp;
+                            {% endwith %}
+                        {% endif %}
+                        <a class="site-link" href="{% url 'asset_management:asset-detail' asset.pk %}">
+                            {{ asset.name }}
+                        </a>
+                        &nbsp;>&nbsp;
+                        {% block form_path_title %}{% endblock %}
+                    </h6>
+                    <h5 class="font-6">{% block form_title %}{% endblock %}</h5>
+                    {% block update_object_type %}{% endblock %}
+                </div>
+                {% crispy form %}
+                <hr>
+                <div class="d-flex align-items-end justify-content-center column-flex">
+                    <h5 class="font-6">Totale</h5>
+                    <div>
+                        {{ user.fiat.sign }} <span id="total-field" class="font-size-110">0.00</span>
+                    </div>
+                </div>
+                <div class="mt-4 mb-2 site-flex-buttons">
+                    <input class="btn site-btn mb-3 mb-lg-0" type="submit"
+                           form="add-transaction-crispy-form" value="Salva transazione">
+                    <a class="site-link font-6 ml-3" href="{% url 'asset_management:asset-detail' asset.pk %}">
+                        Annulla
+                    </a>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+    <script>
+        function total(amount, price, fee, type) {
+            let total = amount * price;
+            if (type === 'buy') {
+                $('#total-field').text(total.toFixed(2))
+            } else {
+                $('#total-field').text(
+                    (total - ((total * fee) / 100)).toFixed(2)
+                )
+            }
+        }
+        $(function () {
+            $('#asset-amount-input').text("{{ asset.symbol }}");
+            $('#asset-price-input').text("{{ user.fiat.symbol }}");
+            total($('#id_amount').val(), $('#id_price').val(), $('#id_fee').val(), $('#id_type').val())
+
+            $('#id_amount, #id_price, #id_fee, #id_type').on('change', function() {
+                total($('#id_amount').val(), $('#id_price').val(), $('#id_fee').val(), $('#id_type').val())
+            })
+        })
+    </script>
+{% endblock %}

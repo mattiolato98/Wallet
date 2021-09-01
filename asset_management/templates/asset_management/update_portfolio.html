@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}{{ block.super }} Modifica portafoglio{% endblock %}
+
+{% block content %}
+    <div class="container-fluid site-box p-4 mb-3 bg-white w-100 shadow">
+        <div class="row">
+            <div class="col unnecessary-column"></div>
+            <div class="site-col col-lg-6 col-12">
+                <div class="mb-5">
+                    <h6 class="font-5">
+                        <a href="{% url 'asset_management:asset-list' %}" class="site-link break-word">
+                            Portafoglio
+                        </a>
+                        &nbsp;>&nbsp;
+                        <a href="{% url 'asset_management:portfolio-detail' portfolio.pk %}" class="site-link break-word">
+                            {{ portfolio.name }}
+                        </a>
+                        &nbsp;>&nbsp;
+                        Modifica portafoglio
+                    </h6>
+                    <h5 class="font-6">Modifica portafoglio</h5>
+                </div>
+                {% crispy form %}
+                <div class="d-flex column-flex align-items-start mobile-column-center mt-4 mb-2">
+                    <div class="d-flex align-items-center justify-content-between site-flex-buttons">
+                        <input class="btn site-btn w-100" type="submit" form="update-portfolio-crispy-form"
+                               value="Salva">
+                        <a class="site-link font-6 ml-3 mt-3 mt-lg-0"
+                           href="{% url 'asset_management:portfolio-detail' portfolio.pk %}">
+                            Annulla
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'transaction_management/transaction_form.html' %}
+
+{% block title %}{{ block.super }} Modifica transazione{% endblock %}
+
+{% block form_path_title %}Modifica transazione{% endblock %}
+{% block form_title %}Modifica transazione{% endblock %}
+{% block update_object_type %}
+    {% if object.buy %}
+        <h5 class="font-6 text-success">Acquisto</h5>
+    {% else %}
+        <h5 class="font-6 text-danger">Vendita</h5>
+    {% endif %}
+{% endblock %}

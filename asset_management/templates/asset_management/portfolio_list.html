@@ -1,0 +1,17 @@
+{% extends 'base_list.html' %}
+
+{% block list_content %}
+    {% for portfolio in portfolios %}
+        <div class="text-element">
+            <a href="{% url 'asset_management:portfolio-detail' portfolio.pk %}"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="font-6 mb-0">{{ portfolio.name }}</span>
+                </div>
+                <div>
+                     <span class="font-5 text-muted mt-0">{{ portfolio.user_assets.count }}</span>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+{% endblock %}

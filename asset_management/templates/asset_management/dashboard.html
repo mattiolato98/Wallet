@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load mathfilters %}
+
+{% block content %}
+    <div class="container-fluid p-4 bg-white w-100 site-box shadow">
+        <div class="row xs-only">
+            <div class="col-12 site-col scrollable-row pl-2">
+                {% block assets_logos_xs %}
+                    {% for asset in assets %}
+                        {% if asset.object.logo %}
+                            <a href="{% url 'asset_management:asset-detail' asset.object.pk %}" class="no-decoration">
+                                <img class="picture-small-fixed mb-2 mr-3" src="{{ asset.object.logo }}" alt="">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% endblock %}
+            </div>
+        </div>
+        <div class="row xl-only">
+            <div class="col-lg-3 col-12 site-col">
+                <div class="media d-flex align-items-center">
+                    <a href="{% url 'user_management:user-detail' %}">
+                        <img src="{{ user.profile.picture.url }}" class="rounded-picture-medium align-self-center"
+                             alt="">
+                    </a>
+                    <div class="media-body ml-3 text-muted">
+                        <a href="#" class="flat-link font-6 break-word">
+                            {{ user.username|truncatechars:30 }}
+                        </a>
+                        <br>
+                        <span class="font-4 break-word">{{ user.profile.full_name }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12 site-col">
+                <div class="mb-3">
+                    <h6 class="font-5">
+                        {% block header_path %}{% endblock %}
+                    </h6>
+                    <h5 class="font-6 mb-3">{% block header_title %}{% endblock %}</h5>
+                    {% block assets_logos_xl %}
+                        {% for asset in assets|slice:5 %}
+                            {% if asset.object.logo %}
+                                <a href="{% url 'asset_management:asset-detail' asset.object.pk %}" class="no-decoration">
+                                    <img class="picture-medium-fixed mb-2 mr-2" src="{{ asset.object.logo }}" alt="">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    {% endblock %}
+                    {% if user.assets.count == 0 %}
+                        <span>Aggiungi un asset</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 unnecessary-column"></div>
+            <div class="col-lg-6 col-12 site-col d-flex column-flex align-items-end mobile-column-center">
+                <a href="{% url 'user_management:user-detail' %}" class="mb-2 mt-2 xs-only">
+                    <img src="{{ user.profile.picture.url }}" class="rounded-picture-small align-self-center"
+                         alt="">
+                </a>
+                <div class="d-flex align-items-start xs-only expand-box-data">
+                    <span class="text-muted">
+                        {% if user.assets.count > 0 %}
+                            {% block mobile-portfolio-title %}{% endblock %}
+                            <i class="fas fa-caret-down box-data-hide"></i>
+                            <i class="fas fa-caret-up box-data-show" style="display: none"></i>
+                        {% else %}
+                            Aggiungi un asset
+                        {% endif %}
+                    </span>
+                </div>
+                <div id="view-box-information"
+                     class="justify-content-center more-detail-box font-size-110 mb-3" style="display: none;">
+                    <hr class="my-2">
+                    <span class="font-4 text-muted">Contributi netti: </span>&nbsp;
+                    {% block net_volume %}{% endblock %}
+                    <br>
+                    <span class="font-4 text-muted">Contributi lordi: </span>&nbsp;
+                    {% block buy_volume %}{% endblock %}
+                </div>
+                {% block fiat_info %}
+                    <h3  class="font-6 mb-0 mt-1">
+                        {% if total_fiat is not None %}
+                            {{ total_fiat|floatformat:2 }} {{ user.fiat.sign }}
+                        {% endif %}
+                    </h3>
+                    {% if net is not None %}
+                        {% if net >= 0 %}
+                            <h5 class="text-success font-6">
+                                + {{ net|floatformat:2 }}{{ user.fiat.sign }} ({{ net_percentage|floatformat:2 }}%)
+                            </h5>
+                        {% else %}
+                            <h5 class="text-danger font-6">
+                                - {{ net|abs|floatformat:2 }}{{ user.fiat.sign }} ({{ net_percentage|abs|floatformat:2 }}%)
+                            </h5>
+                        {% endif %}
+                    {% endif %}
+                {% endblock %}
+                <div class="xl-only">
+                    <a class=" expand-box-data cursor-pointer link-decorated text-muted">Altre info</a>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+    <div class="container-fluid p-4 mb-2 w-75 mt-4">
+        <div class="row d-flex align-items-center justify-content-end">
+            {% block main_button %}{% endblock %}
+        </div>
+    </div>
+    <div class="container-fluid site-box shadow p-4 mb-3 bg-white w-75">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between">
+                {% block objects_title %}{% endblock %}
+            </div>
+            {% block objects_options %}{% endblock %}
+        </div>
+        <hr>
+        {% block object_list %}{% endblock %}
+    </div>
+{% endblock %}

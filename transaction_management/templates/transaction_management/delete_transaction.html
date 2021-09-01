@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load asset_filters %}
+
+{% block title %}{{ block.super }} Elimina transazione{% endblock %}
+
+{% block content %}
+    <div class="container-fluid site-box p-4 mb-3 bg-white w-100 shadow">
+        <div class="row">
+            <div class="col site-col">
+                <div class="media d-flex align-items-center">
+                    <a href="#">
+                        <img src="{{ asset.logo }}" class="rounded-picture-medium align-self-center" alt="">
+                    </a>
+                    <div class="media-body ml-3 text-muted">
+                        <a href="{% url 'asset_management:asset-detail' asset.pk %}"
+                           class="flat-link font-6 break-word">
+                            {{ asset.name }}
+                        </a>
+                        <br>
+                        <span class="font-4 break-word">{{ asset.symbol }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12 site-col">
+                <div class="mb-5">
+                    <h6 class="font-5">
+                        <a class="site-link" href="{% url 'asset_management:asset-list' %}">
+                            Portafoglio
+                        </a>
+                        &nbsp;>&nbsp;
+                        {% if user.portfolios.count > 1 %}
+                            {% with portfolio=user|user_asset:asset|portfolio %}
+                                <a class="site-link"
+                                   href="{% url 'asset_management:portfolio-detail' portfolio.pk %}">
+                                    {{ portfolio.name }}
+                                </a>
+                                &nbsp;>&nbsp;
+                            {% endwith %}
+                        {% endif %}
+                        <a class="site-link" href="{% url 'asset_management:asset-detail' asset.pk %}">
+                            {{ asset.name }}
+                        </a>
+                        &nbsp;>&nbsp;
+                        Elimina transazione
+                    </h6>
+                    <h5 class="font-6">Elimina transazione</h5>
+                    {% if object.buy %}
+                        <h5 class="font-6 text-success">Acquisto</h5>
+                    {% else %}
+                        <h5 class="font-6 text-danger">Vendita</h5>
+                    {% endif %}
+                </div>
+                <span class="font-6">Quantità: </span>
+                <span class="font-4">{{ object.amount|floatformat:8 }} {{ asset.symbol }}</span>
+                <br>
+                <span class="font-6">Prezzo: </span>
+                <span class="font-4">{{ object.price|floatformat:2 }} {{ user.fiat.symbol }}</span>
+                <br>
+                <span class="font-6">Commissioni: </span>
+                <span class="font-4">{{ object.fee|floatformat:3 }}%</span>
+                <br>
+                <span class="font-6">Data esecuzione: </span>
+                <span class="font-4">{{ object.date|naturalday }}</span>
+                <hr>
+                <span class="font-6">Totale: </span>
+                <span class="font-4">
+                    {% if object.buy %}
+                        {{ object.volume|floatformat:2 }} {{ user.fiat.sign }}
+                    {% else %}
+                        {{ object.sell.net_volume|floatformat:2 }} {{ user.fiat.sign }}
+                    {% endif %}
+                </span>
+                <form method="post" id="delete-transaction-form">{% csrf_token %}</form>
+                <div class="mt-4 mb-2 site-flex-buttons">
+                    <input class="btn btn-danger mb-3 mb-lg-0" type="submit"
+                           form="delete-transaction-form" value="Elimina transazione">
+                    <a class="site-link font-6 ml-3" href="{% url 'asset_management:asset-detail' asset.pk %}">
+                        Annulla
+                    </a>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+{% endblock %}

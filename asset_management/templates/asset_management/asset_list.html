@@ -1,0 +1,16 @@
+{% extends 'base_list.html' %}
+
+{% block list_content %}
+    {% for asset in assets %}
+        <div class="text-element">
+            <a href="{% url 'asset_management:asset-detail' asset.object.pk %}"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                {% include 'asset_management/asset_list_item.html' %}
+            </a>
+        </div>
+    {% empty %}
+        <div class="ml-3 mt-3 mb-3">
+            <span class="font-4">Ancora nessun asset &#128543;</span>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'asset_management/dashboard.html' %}
+{% load static %}
+{% load mathfilters %}
+
+{% block title %}{{ block.super }} {{ portfolio.name }}{% endblock %}
+
+{% block header_path %}
+    <a href="{% url 'asset_management:asset-list' %}" class="site-link break-word">
+        Portafoglio
+    </a>
+    &nbsp;>&nbsp;
+    {{ portfolio.name }}
+{% endblock %}
+{% block header_title %}{{ portfolio.name }}{% endblock %}
+
+{% block mobile-portfolio-title %}
+    Saldo portafoglio
+{% endblock %}
+
+{% block net_volume %}
+    {% if portfolio.net_volume < 0 %}
+        <span class="font-6">{{ portfolio.net_volume|abs|floatformat:2 }} {{ user.fiat.sign }}</span>
+    {% else %}
+        <span class="font-6">0 {{ user.fiat.sign }}</span>
+    {% endif %}
+{% endblock %}
+
+{% block buy_volume %}
+    <span class="font-6">{{ portfolio.buy_volume|floatformat:2 }} {{ user.fiat.sign }}</span>
+{% endblock %}
+
+{% block main_button %}
+    <a href="{% url 'asset_management:portfolio-asset-update' portfolio.pk %}" class="btn site-btn shadow">
+        <i class="fas fa-pencil-alt"></i> &nbsp; <span class="font-7">Gestisci asset</span>
+    </a>
+{% endblock %}
+
+{% block objects_title %}
+    <h4 class="font-6 ml-2">Asset</h4>
+    <h5 class="text-muted font-6 ml-3">{{ portfolio.user_assets.count }}</h5>
+{% endblock %}
+
+{% block objects_options %}
+    <i class="fas fa-ellipsis-h site-small-icon mr-2"
+       data-toggle="dropdown"></i>
+    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+        <a class="dropdown-item cursor-pointer"
+           href="{% url 'asset_management:update-portfolio' portfolio.pk %}">
+            Modifica portafoglio
+        </a>
+        <a class="dropdown-item bg-danger-hover cursor-pointer"
+           href="{% url 'asset_management:delete-portfolio' portfolio.pk %}">
+            <span class="text-danger">Elimina portafoglio</span>
+        </a>
+    </div>
+{% endblock %}
+
+{% block object_list %}
+    {% include 'asset_management/asset_list.html' %}
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

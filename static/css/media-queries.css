@@ -1,0 +1,124 @@
+/* LARGE SCREEN */
+@media (max-width: 991px) {
+    .burger {
+        display: block !important;
+    }
+    .unnecessary-column {
+        display: none;
+    }
+    .site-box {
+        border-radius: 0;
+        margin-right: 0;
+        margin-left: 0;
+        padding: 15px !important;
+        width: 100% !important;
+    }
+    .site-btn-col {
+        margin-top: 10px;
+        margin-left: 0 !important;
+    }
+    #site-main-page {
+        padding: 0;
+    }
+    .navbar-header-background {
+        height: 65px !important;
+    }
+    .shadow, .shadow-lg, .shadow-sm {
+        box-shadow: none !important;
+    }
+    .site-big-title {
+        font-size: 200%;
+    }
+    .site-col {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-bottom: 20px;
+    }
+    .small-btn {
+        width: auto !important;
+    }
+    .site-attached-col {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    .mobile-center {
+        justify-content: center !important;
+    }
+    .mobile-column-center {
+        align-items: center !important;
+    }
+    .mobile-top-no-margin {
+        margin-top: 0 !important;
+    }
+    .rounded-image {
+        border-radius: 50%;
+        height: 25%;
+        width: auto;
+    }
+    .nav-link-text {
+        display: none;
+    }
+    .nav-link-icon {
+        margin-right: 0 !important;
+    }
+    .nav-link {
+        margin-left: 0.7rem !important;
+        margin-right: 0.7rem !important;
+    }
+    .lg-only {
+        display: none !important;
+    }
+    .navbar-nav {
+        width: 100% !important;
+        align-items: center !important;
+    }
+    .navbar-brand {
+        margin-right: 0 !important;
+    }
+    .xl-only {
+        display: none !important;
+    }
+    .site-flex-buttons {
+        width: 100% !important;
+        flex-wrap: wrap;
+    }
+    .tooltip {
+        display: none; !important
+    }
+    .btn {
+        width: 100% !important;
+    }
+    #asset-detail-user-info .sm-left {
+        justify-content: start !important;
+        align-items: flex-start !important;
+    }
+    .mobile-column-flex {
+        display: flex;
+        flex-direction: column;
+    }
+    #site-navbar {
+        padding-bottom: 5px;
+    }
+    #site-navbar .logo-font {
+        font-size: 25px;
+    }
+}
+
+@media (min-width: 992px) {
+    .xs-only {
+        display: none !important;
+    }
+}
+
+@media (max-width: 350px) {
+    .xxs-hide {
+        display: none !important;
+    }
+    .p-xxs-0 {
+        padding: 0 !important;
+    }
+    .ml-xxs-0 {
+        margin-left: 0 !important;
+    }
+}

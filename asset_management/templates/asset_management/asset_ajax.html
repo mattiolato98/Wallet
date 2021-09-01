@@ -1,0 +1,44 @@
+<script>
+    function ajaxDeleteAsset(asset_pk, link_clicked) {
+        let $item = link_clicked.closest('.asset-element');
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'asset_management:ajax-delete-asset' %}",
+            data: {
+                'asset_pk': asset_pk,
+            },
+            headers:{
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $item.html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data) {
+                assetDeleteSuccess(data, $item);
+            }
+        });
+    }
+
+    function ajaxMoveAsset(asset_pk, move_to, link_clicked) {
+        let $item = link_clicked.closest('.asset-element');
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'asset_management:ajax-move-asset' %}",
+            data: {
+                'asset_pk': asset_pk,
+                'move_to': move_to,
+            },
+            headers:{
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $item.html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data) {
+                assetMoveSuccess(data, $item);
+            }
+        });
+    }
+</script>

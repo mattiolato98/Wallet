@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+    <style type="text/css">
+        .dropdown-menu {
+            min-width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}{{ block.super }} Nuovo asset{% endblock %}
+
+{% block content %}
+    <div class="container-fluid p-4 bg-white w-100 site-box shadow">
+        <div class="row">
+            <div class="col unnecessary-column"></div>
+            <div class="col-lg-6 col-12 site-col">
+                <div class="mb-1">
+                    <h6 class="font-5">
+                        <a href="{% url 'asset_management:asset-list' %}" class="site-link break-word">
+                            Portafoglio
+                        </a>
+                        &nbsp;>&nbsp;
+                        Nuovo asset
+                    </h6>
+                    <h5 class="font-6 mb-5">Aggiungi un asset</h5>
+                    {% crispy form %}
+                    <div class="mt-4 mb-2 site-flex-buttons">
+                        <input class="btn site-btn mb-3 mb-lg-0" type="submit" form="add-asset-crispy-form" value="Aggiungi">
+                        <a class="site-link font-6 ml-3" href="{% url 'asset_management:asset-list' %}">
+                            Annulla
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+{% endblock %}

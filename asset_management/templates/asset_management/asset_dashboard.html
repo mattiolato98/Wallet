@@ -1,0 +1,78 @@
+{% extends 'asset_management/dashboard.html' %}
+{% load static %}
+{% load mathfilters %}
+
+{% block title %}{{ block.super }} Portafoglio{% endblock %}
+
+{% block header_path %}Portafoglio{% endblock %}
+{% block header_title %}Portafoglio{% endblock %}
+
+{% block mobile-portfolio-title %}
+    {% if user.portfolios.count == 1 %}
+        Saldo portafoglio
+    {% else %}
+        Saldo totale
+    {% endif %}
+{% endblock %}
+
+{% block net_volume %}
+    {% if user.net_volume < 0 %}
+        <span class="font-6">{{ user.net_volume|abs|floatformat:2 }} {{ user.fiat.sign }}</span>
+    {% else %}
+        <span class="font-6">0 {{ user.fiat.sign }}</span>
+    {% endif %}
+{% endblock %}
+
+
+{% block buy_volume %}
+    <span class="font-6">{{ user.buy_volume|floatformat:2 }} {{ user.fiat.sign }}</span>
+{% endblock %}
+
+{% block main_button %}
+    <a href="{% url 'asset_management:asset-add' %}" class="btn site-btn shadow">
+        <i class="fas fa-plus"></i> <span class="font-7">Nuovo asset</span>
+    </a>
+{% endblock %}
+
+{% block objects_title %}
+    {% if user.portfolios.count == 1 %}
+        <h4 class="font-6 ml-2">Asset</h4>
+        <h5 class="text-muted font-6 ml-3">{{ user.assets.count }}</h5>
+    {% else %}
+        <h4 class="font-6 ml-2">Portafogli</h4>
+        <h5 class="text-muted font-6 ml-3">{{ user.portfolios.count }}</h5>
+    {% endif %}
+{% endblock %}
+
+{% block objects_options %}
+
+    <i class="fas fa-ellipsis-h site-small-icon mr-2"
+       data-toggle="dropdown"></i>
+    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+        <a class="dropdown-item cursor-pointer"
+           href="{% url 'asset_management:asset-list-update' %}">
+            {% if user.portfolios.count == 1 %}
+                Modifica
+            {% else %}
+                Gestisci asset
+            {% endif %}
+        </a>
+        <hr class="my-0">
+        <a class="dropdown-item cursor-pointer"
+           href="{% url 'asset_management:create-portfolio' %}">
+            Nuovo portafoglio
+        </a>
+    </div>
+{% endblock %}
+
+{% block object_list %}
+    {% if user.portfolios.count == 1 %}
+        {% include 'asset_management/asset_list.html' %}
+    {% else %}
+        {% include 'asset_management/portfolio_list.html' with portfolios=user.portfolios.all %}
+    {% endif %}
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

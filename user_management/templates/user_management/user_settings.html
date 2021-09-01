@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ block.super }} Impostazioni{% endblock %}
+
+{% block content %}
+    <div class="container-fluid site-box p-4 mb-3 bg-white w-100 shadow">
+        <div class="row">
+            <div class="col unnecessary-column"></div>
+            <div class="site-col col-lg-6 col-12">
+                <div class="mb-5">
+                    <h6 class="font-5">
+                        <a class="site-link" href="{% url 'user_management:user-detail' %}">Profilo</a>
+                        &nbsp;>&nbsp;
+                        Impostazioni</h6>
+                    <h5 class="font-6">Impostazioni</h5>
+                </div>
+                <div>
+                    <a href="{% url 'asset_management:currency-update' %}"
+                       class="site-blue-text font-6">Impostazioni valuta</a> <br>
+                    <span class="text-muted">
+                        Modifica la valuta fiat che utilizzi nelle transazioni
+                    </span>
+                </div>
+                <hr>
+                <div>
+                    <a href="#"
+                       class="site-blue-text font-6">Modifica password</a> <br>
+                    <span class="text-muted">
+                        Modifica la tua password
+                    </span>
+                </div>
+                <div>
+                    {% if not user.has_profile %}
+                        <hr>
+                        <a href="{% url 'user_management:profile-create' %}" class="site-blue-text font-6">
+                            Crea profilo
+                        </a> <br>
+                        <span class="text-muted">
+                            Completa i dettagli del tuo profilo
+                        </span>
+                    {% endif %}
+                </div>
+                <hr>
+                <div>
+                    <a href="#"
+                       class="site-red-text font-6">Cancella definitivamente il mio account</a> <br>
+                    <span class="text-muted">
+                        Attenzione! Tutte le tue informazioni e le tue transazioni verranno
+                        eliminate e non sarà più possibile recuperarle
+                    </span>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+{% endblock %}
